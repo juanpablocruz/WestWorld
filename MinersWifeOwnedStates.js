@@ -52,7 +52,16 @@ DoHouseWork.prototype.Execute = function(wife) {
     }
 }
 DoHouseWork.prototype.Exit = function(wife) {}
-DoHouseWork.prototype.OnMessage = function(wife,msg) { return false;}
+DoHouseWork.prototype.OnMessage = function(wife,msg) {
+    switch(msg.Msg) {
+        case message_type.Msg_HiHoneyImHome: {
+            console.log(GetNameOfEntity(wife.ID()),":","Hi honey. Let me make you some of mah fine country stew");
+            wife.GetFSM().ChangeState(cookStew);
+        }
+        return true;
+    }
+    return false;
+}
 
 function VisitBathroom() {
     State.call(this);
@@ -93,6 +102,7 @@ CookStew.prototype.Execute = function(wife) {
 }
 CookStew.prototype.Exit = function(wife) {
     console.log(GetNameOfEntity(wife.ID()),":","Puttin' the stew on the table");
+
 }
 CookStew.prototype.OnMessage = function(wife,msg) {
     switch(msg.Msg) {
@@ -115,3 +125,4 @@ CookStew.prototype.OnMessage = function(wife,msg) {
 var doHouseWork = new DoHouseWork();
 var visitBathroom = new VisitBathroom();
 var wifesGlobalState = new WifesGlobalState();
+var cookStew = new CookStew();

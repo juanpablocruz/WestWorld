@@ -78,7 +78,7 @@ GoHomeAndSleepTilRested.prototype.Enter = function(pMiner){
     if(pMiner.Location() != location_type.shack) {
         console.log(GetNameOfEntity(pMiner.ID()),": ", "Walkin' home");
         pMiner.ChangeLocation(location_type.shack);
-        
+
         messageDispatcher.DispatchMessage(SEND_MSG_IMMEDIATELY,
                                           pMiner.ID(),
                                           names.ent_Elsa,
@@ -100,7 +100,7 @@ GoHomeAndSleepTilRested.prototype.Exit = function(pMiner){
 }
 GoHomeAndSleepTilRested.prototype.OnMessage = function(pMiner,msg){
     switch(msg.Msg) {
-        case Msg_StewReady:
+        case message_type.Msg_StewReady:
             console.log(GetNameOfEntity(pMiner.ID()),": ", "Okay Hun, ahm a comin'!");
             pMiner.GetFSM().ChangeState(eatStew);
             return true;

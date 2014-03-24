@@ -28,10 +28,27 @@ set.prototype.insert = function(obj) {
 
 set.prototype.erase = function(obj) {
     var it = this.first;
-    while(it.next != null) {
-        if(it.data == obj) {
-            it.next.prev = it.prev;
-            it.prev.next = it.next;
+    var nf = 1;
+
+    while(nf) {
+        if(it.data.compare(obj.data)) {
+            if(it.next != null && it.prev != null) {
+                it.next.prev = it.prev;
+                it.prev.next = it.next;
+            } else {
+                if (it.prev != null) {
+                    it.prev.next = null;
+                } else {
+                    it = null;
+                    this.first = null;
+                    this.last = null;
+                }
+            }
+            nf = 0;
+        } else {
+            if ( it.next != null)
+                it = it.next;
+            else nf = 0;
         }
     }
 }
@@ -69,7 +86,7 @@ MessageDispatcher = function() {
 
 MessageDispatcher.prototype.Discharge = function (pReceiver, telegram){
     if (!pReceiver.HandleMessage(telegram)) {
-        console.log("Message not handled");
+        console.log("%cMessage not handled","color: red");
     }
 }
 
@@ -103,12 +120,13 @@ MessageDispatcher.prototype.DispatchMessage = function (delay,
     }
 }
 MessageDispatcher.prototype.DispatchDelayedMessage = function(){
+
     var d = new Date();
     var CurrentTime = d.getTime();
     while ( !this.PriorityQ.empty() &&
-           (this.PriorityQ.begin().DispatchTime < CurrentTime) &&
-           (this.PriorityQ.begin().DispatchTime > 0) ) {
-        var telegram = this.PriorityQ.begin();
+           (this.PriorityQ.begin().data.DispatchTime < CurrentTime) &&
+           (this.PriorityQ.begin().data.DispatchTime > 0) ) {
+        var telegram = this.PriorityQ.begin().data;
         var pReceiver = entityManager.GetEntityFromId(telegram.Receiver);
         this.Discharge(pReceiver,telegram);
         this.PriorityQ.erase(this.PriorityQ.begin());

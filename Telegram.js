@@ -1,4 +1,4 @@
-function Telegram(Sender,Receiver,Msg,DispatchTime,ExtraInfo) {
+function Telegram(DispatchTime,Sender,Receiver,Msg,ExtraInfo) {
     this.Sender = Sender;
     this.Receiver = Receiver;
     this.Msg = Msg;
@@ -6,7 +6,7 @@ function Telegram(Sender,Receiver,Msg,DispatchTime,ExtraInfo) {
     this.ExtraInfo = ExtraInfo;
 }
 
-var SmallestDely= 0.25;
+var SmallestDelay= 0.25;
 
 Telegram.prototype.compare = function(T) {
     return (Math.abs(this.DispatchTime-T.DispatchTime) < SmallestDelay) &&
