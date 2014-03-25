@@ -61,6 +61,9 @@ set.prototype.empty = function() {
 var message_type = {
     Msg_HiHoneyImHome : 1,
     Msg_StewReady : 2,
+    Msg_FightStart : 3,
+    Msg_FightEnd : 4,
+    Msg_punchThrow : 5,
 }
     
 function MsgToStr(msg) {
@@ -73,6 +76,9 @@ function MsgToStr(msg) {
       case Msg_StewReady:
 
         return "StewReady";
+      case Msg_Fight:
+
+        return "Fight";
 
       default:
 

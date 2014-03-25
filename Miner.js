@@ -11,6 +11,8 @@ function Miner (id) {
     this.m_iFatigue = 0;
     this.m_pStateMachine = new StateMachine(this);
     this.m_pStateMachine.SetCurrentState(goHomeAndSleepTilRested);
+    this.m_iTimeDrinking = 0;
+    this.m_bDriking = false;
     
     BaseGameEntity.call(this,id);
     
@@ -44,7 +46,13 @@ Miner.prototype.AddToWealth = function(val){
 };
 Miner.prototype.SetWealth = function(val){ console.log(this.m_iMoneyInBank);this.m_iMoneyInBank = val;}
 Miner.prototype.Thirsty = function(){ if ( this.m_iThirst >= ThirstLevel) return true; return false;}
-Miner.prototype.BuyAndDrinkWhiskey = function(){ this.m_iThirst = 0; this.m_iMoneyInBank = this.m_iMoneyInBank-2;}
+Miner.prototype.BuyAndDrinkWhiskey = function(){
+    this.m_iMoneyInBank = this.m_iMoneyInBank-2;
+    this.m_iTimeDrinking = 0;
+    this.m_bDriking = true;
+}
+Miner.prototype.DrinkWhiskey = function(){ if(this.m_iTimeDrinking){this.m_iThirst = 0;this.m_bDriking=false;}else{this.m_iTimeDrinking++}}
+Miner.prototype.Drinking = function() { return this.m_bDriking;}
 
 Miner.prototype.update = function(){ 
     this.m_iThirst++; 

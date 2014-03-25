@@ -17,7 +17,8 @@ BaseGameEntity.prototype.ID = function() {return this.m_ID;}
 
 var names = {
     ent_Miner_Bob : 1,
-    ent_Elsa : 2
+    ent_Elsa : 2,
+    ent_Big_Joe : 3,
 }
 
 var location_type = {
@@ -34,6 +35,9 @@ function GetNameOfEntity(n) {
             break;
         case names.ent_Elsa:
             return "Elsa";
+            break;
+        case names.ent_Big_Joe:
+            return "Big Joe";
             break;
         default:
             return "UNKNOWN!";

@@ -10,6 +10,7 @@ EnterMineAndDigForNugget.prototype.Instance = function(){
 }
 EnterMineAndDigForNugget.prototype.Enter = function(pMiner){
     if ( pMiner.Location() != location_type.goldmine ) {
+        pMiner.ChangeLocation(location_type.goldmine);
         console.log(GetNameOfEntity(pMiner.ID()),":","Walkin' to the goldmine");
     }
 }
@@ -28,7 +29,7 @@ EnterMineAndDigForNugget.prototype.Execute = function(pMiner){
 }
 
 EnterMineAndDigForNugget.prototype.Exit = function(pMiner){
-    console.log(GetNameOfEntity(pMiner.ID()),": ","Ah'm leavin' the goldmine with mah pockets full o' sweet gold");
+    console.log(GetNameOfEntity(pMiner.ID()),": ","Ah'm leavin' the goldmine with mah pockets full o' sweet gold", pMiner.Location());
 }
 
 
@@ -125,15 +126,29 @@ QuenchThirst.prototype.Enter = function(pMiner){
 }
 QuenchThirst.prototype.Execute = function(pMiner){
     if(pMiner.Thirsty()) {
-        pMiner.BuyAndDrinkWhiskey();
         console.log(GetNameOfEntity(pMiner.ID()),": ", "That's mighty fine sippin' liquer");
-        pMiner.GetFSM().ChangeState(enterMineAndDigForNugget);
+        if(!pMiner.Drinking()) {
+            pMiner.BuyAndDrinkWhiskey();
+        }
+        else {
+            pMiner.DrinkWhiskey();
+            pMiner.GetFSM().ChangeState(enterMineAndDigForNugget);
+        }
     } else {
         console.log("ERROR!");
     }
 }
 QuenchThirst.prototype.Exit = function(pMiner){
     console.log(GetNameOfEntity(pMiner.ID()),": ", "Leaving the saloon, feelin' good");
+}
+
+QuenchThirst.prototype.OnMessage = function(agent, msg){
+    switch(msg.Msg) {
+        case message_type.Msg_FightStart:
+            agent.GetFSM().ChangeState(fightingDrunks);
+            return true;
+    }
+    return false;
 }
 
 function EatStew() {
@@ -159,8 +174,44 @@ EatStew.prototype.OnMessage = function(agent, msg){
     return false;
 }
 
+function FightingDrunks() {
+
+}
+
+FightingDrunks.prototype = new State();
+FightingDrunks.prototype.constructor = FightingDrunks;
+
+FightingDrunks.prototype.Instance = function(){ return this;}
+FightingDrunks.prototype.Enter = function(pMiner){
+    if(pMiner.Location() != location_type.saloon) {
+        pMiner.ChangeLocation(location_type.saloon);
+    }
+    console.log(GetNameOfEntity(pMiner.ID()),": ", "Oh not again!");
+}
+FightingDrunks.prototype.Execute = function(pMiner){
+    console.log(GetNameOfEntity(pMiner.ID()),": ", "Take this!");
+    messageDispatcher.DispatchMessage(SEND_MSG_IMMEDIATELY,
+                                          pMiner.ID(),
+                                          names.ent_Big_Joe,
+                                          message_type.Msg_punchThrow,
+                                          NO_ADDITIONAL_INFO);
+}
+FightingDrunks.prototype.Exit = function(pMiner){
+    console.log(GetNameOfEntity(pMiner.ID()),": ", "Next time you should think twice!");
+}
+
+FightingDrunks.prototype.OnMessage = function(agent, msg){
+    switch(msg.Msg) {
+        case message_type.Msg_FightEnd:
+            agent.GetFSM().RevertToPreviousState();
+            return true;
+    }
+    return false;
+}
+
 var enterMineAndDigForNugget = new EnterMineAndDigForNugget();
 var visitBankAndDepositGold = new VisitBankAndDepositGold();
 var goHomeAndSleepTilRested = new GoHomeAndSleepTilRested();
 var quenchThirst = new QuenchThirst();
 var eatStew = new EatStew();
+var fightingDrunks = new FightingDrunks();

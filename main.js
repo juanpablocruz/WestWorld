@@ -12,11 +12,14 @@ function sleep(milliseconds) {
 
 var Bob = new Miner(names.ent_Miner_Bob);
 var Elsa = new MinersWife(names.ent_Elsa);
+var BigJoe = new Bjoe(names.ent_Big_Joe);
 
 entityManager.RegisterEntity(Bob);
 entityManager.RegisterEntity(Elsa);
+entityManager.RegisterEntity(BigJoe);
 
 for(var i = 0; i < 50; ++i) {
+    BigJoe.update();
     Bob.update();
     Elsa.update();
     
