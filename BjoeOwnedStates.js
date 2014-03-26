@@ -9,7 +9,7 @@ BjoeGlobalState.prototype.Enter = function(bjoe) {
     console.log(GetNameOfEntity(bjoe.ID()),":","Need more Ale!");
 };
 BjoeGlobalState.prototype.Execute = function(bjoe) {
-    if ( Math.random() < 0.1 && Bob.Location() == location_type.saloon) {
+    if ( Math.random() < 0.1 && entityManager.GetEntityFromId(names.ent_Miner_Bob).Location() == location_type.saloon) {
         bjoe.GetFSM().ChangeState(fightingStance);
     }
 }

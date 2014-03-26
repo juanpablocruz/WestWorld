@@ -28,6 +28,15 @@ var location_type = {
     saloon : 4 
 }
 
+function GetNameOfLocation(l) {
+    switch(l) {
+        case location_type.shack:return "Shack";break;
+        case location_type.goldmine:return "Goldmine";break;
+        case location_type.bank:return "Bank";break;
+        case location_type.saloon:return "Saloon";break;
+    }
+}
+
 function GetNameOfEntity(n) {
     switch(n) {
         case names.ent_Miner_Bob:

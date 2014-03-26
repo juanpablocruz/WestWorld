@@ -10,19 +10,34 @@ function sleep(milliseconds) {
   }
 }
 
-var Bob = new Miner(names.ent_Miner_Bob);
-var Elsa = new MinersWife(names.ent_Elsa);
-var BigJoe = new Bjoe(names.ent_Big_Joe);
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 2000);
+          };
+})();
 
-entityManager.RegisterEntity(Bob);
-entityManager.RegisterEntity(Elsa);
-entityManager.RegisterEntity(BigJoe);
 
-for(var i = 0; i < 50; ++i) {
-    BigJoe.update();
-    Bob.update();
-    Elsa.update();
+$(function() {
+
+    var Bob = new Miner(names.ent_Miner_Bob);
+    var Elsa = new MinersWife(names.ent_Elsa);
+    var BigJoe = new Bjoe(names.ent_Big_Joe);
+
+    entityManager.RegisterEntity(Bob);
+    entityManager.RegisterEntity(Elsa);
+    entityManager.RegisterEntity(BigJoe);
+
     
-    messageDispatcher.DispatchDelayedMessage();
-    sleep(800);
-}
+    (function animloop(){
+        BigJoe.update();
+        Bob.update();
+        Elsa.update();
+
+        messageDispatcher.DispatchDelayedMessage();
+        sleep(800);
+        requestAnimFrame(animloop);
+    })();
+});

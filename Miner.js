@@ -55,8 +55,7 @@ Miner.prototype.DrinkWhiskey = function(){ if(this.m_iTimeDrinking){this.m_iThir
 Miner.prototype.Drinking = function() { return this.m_bDriking;}
 
 Miner.prototype.update = function(){ 
-    this.m_iThirst++; 
-    
+    this.m_iThirst++;
     this.m_pStateMachine.update();
 }
 
